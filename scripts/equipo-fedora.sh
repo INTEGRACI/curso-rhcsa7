@@ -6,10 +6,14 @@
 # Licencia: GPL Versión 3                                                     #
 ###############################################################################
 
-dnf clean metadata
+# Detección de usuario, se debe ejecutar como usuario root
+if [[ $EUID -ne 0 ]]; then
+    echo -ne "\nPor favor ejecuta el script como usuario \"root\".\n"
+    exit 1
+fi
 
 dnf -y install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-
+dnf clean metadata
 dnf -y update
 
 dnf -y groupinstall "Development Tools"
@@ -94,4 +98,4 @@ dnf -y install VirtualBox
 
 dnf -y install ansible
 
-reboot
+curl -sSL https://integraci.github.io/curso-rhcsa7/scripts/crea-bridge.sh | bash
